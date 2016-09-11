@@ -6,9 +6,9 @@ from netaddr import *
 
 ar = {
     'device_type': 'cisco_ios',
-    'ip':   '',
-    'username': '',
-    'password': '',
+    'ip':   '192.168.255.238',
+    'username': 'rancid',
+    'password': 'r4nc1d',
     'port' : 22,          # optional, defaults to 22
     'secret': 'secret',     # optional, defaults to ''
     'verbose': False,       # optional, defaults to False
@@ -35,6 +35,8 @@ totaluserspppoa = net_connect.send_command('show users summary  | incl PPPOA')
 #print userinfo.find(args.username) == -1 and routeinfo.find(args.route) != -1 #username is not found, route is present
 #print userinfo.find(args.username) != -1 and routeinfo.find(args.route) != -1 #username present and route present
 
+#strip everything behind @ from username (no match for username in local router)
+args.username=args.username.split('@')[0]
 
 # total users
 totalusers=totalusers.split()
@@ -47,20 +49,20 @@ pppoeusers=int(totalusers[0])-int(totaluserspppoa[1])
 
 
 if (userinfo.find(args.username) == -1 and routeinfo.find(args.route) == -1):
-        print "username and route not present... user is offline \n"
+        print "username and route not present... user is offline \r\n"
         sys.exit()
 elif (userinfo.find(args.username) == -1 and routeinfo.find(args.route) != -1):
         #username is not found, route is present
         routeinfo=routeinfo.split()
         #convert to strings
         routeinfo=[str(routeinfo[x]) for x in range(len(routeinfo))]
-        print routeinfo[3] + ' is active' + '\n'
+        print routeinfo[3] + ' is active from Nextpertise' + '\r\n'
 elif (userinfo.find(args.username) != -1 and routeinfo.find(args.route) != -1):
         #username present and route present
         userinfo=userinfo.split()
         #convert to strings
         userinfo=[str(userinfo[x]) for x in range(len(userinfo))]
-        print "User %s is connected for %s by using %s and has ip address: %s(%s)\n" % (userinfo[1],userinfo[3],userinfo[2],userinfo[4],userinfo[0])
+        print "User %s is connected for %s by using %s and has ip address: %s(%s)\r\n" % (userinfo[1],userinfo[3],userinfo[2],userinfo[4],userinfo[0])
 
         # get detailed info from either PPPoE or PPPoA
         if userinfo[2]=="PPPoE":
@@ -71,10 +73,10 @@ elif (userinfo.find(args.username) != -1 and routeinfo.find(args.route) != -1):
                 mac=EUI(pppoeclient[2])
                 oui = mac.oui
                 ouiorg=str(oui.registration().org)
-                print 'Customer MAC address is: ' + str(mac) + ' Vendor-ID: ' + ouiorg + '\n'
-                print 'Customer session is present on interface: ' + pppoeclient[3] + '\n'
-                print 'Total # of PPPoE sessions is: %d ' % pppoeusers + '\n'
-                print "Total # of PPP users: %s \n" % totalusers[0]
+                print 'Customer MAC address is: ' + str(mac) + ' Vendor-ID: ' + ouiorg + '\r\n'
+                print 'Customer session is present on interface: ' + pppoeclient[3] + '\r\n'
+                print 'Total # of PPPoE sessions is: %d ' % pppoeusers + '\r\n'
+                print "Total # of PPP users: %s \r\n" % totalusers[0]
         else:
                 #Fetch the ATM PVC number
                 atmclient=net_connect.send_command('show interfaces ' + userinfo[0] + ' | incl Bound')
@@ -85,8 +87,8 @@ elif (userinfo.find(args.username) != -1 and routeinfo.find(args.route) != -1):
                 atmclient2=net_connect.send_command('show atm pvc interface ' + atmpvc[2] + ' | incl 2/0')
                 atmpvc2=atmclient2.split()
                 atmpvc2=[str(atmpvc2[x]) for x in range(len(atmpvc2))]
-                print 'Interface is: ' + atmpvc2[0] + ' VPI: ' + atmpvc2[2] + ' VCI: ' + atmpvc2[3] + ' PeakRate: ' + atmpvc2[7] + 'Kbps Status: ' + atmpvc2[8] + '\n'
+                print 'Interface is: ' + atmpvc2[0] + ' VPI: ' + atmpvc2[2] + ' VCI: ' + atmpvc2[3] + ' PeakRate: ' + atmpvc2[7] + 'Kbps Status: ' + atmpvc2[8] + '\r\n'
                 atmping=net_connect.send_command('ping atm interface atm' + atmpvc2[0] + ' ' + atmpvc2[2] + ' ' + atmpvc2[3] + ' end')
-                print 'Results of ATM ping: %s' % atmping + '\n'
-                print "Total # of PPPoA users: %s \n" % totaluserspppoa[1]
-                print "Total # of PPP users: %s \n" % totalusers[0]
+                print 'Results of ATM ping: %s' % atmping + '\r\n'
+                print "Total # of PPPoA users: %s \r\n" % totaluserspppoa[1]
+                print "Total # of PPP users: %s \r\n" % totalusers[0]
