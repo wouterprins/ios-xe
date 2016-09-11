@@ -6,9 +6,9 @@ from netaddr import *
 
 ar = {
     'device_type': 'cisco_ios',
-    'ip':   '192.168.255.238',
-    'username': 'rancid',
-    'password': 'r4nc1d',
+    'ip':   '',
+    'username': '',
+    'password': '',
     'port' : 22,          # optional, defaults to 22
     'secret': 'secret',     # optional, defaults to ''
     'verbose': False,       # optional, defaults to False
@@ -55,7 +55,7 @@ elif (userinfo.find(args.username) == -1 and routeinfo.find(args.route) != -1):
         routeinfo=routeinfo.split()
         #convert to strings
         routeinfo=[str(routeinfo[x]) for x in range(len(routeinfo))]
-        print routeinfo[3] + ' is active from Nextpertise' + '\r\n'
+        print routeinfo[3] + ' is active' + '\r\n'
 elif (userinfo.find(args.username) != -1 and routeinfo.find(args.route) != -1):
         #username present and route present
         userinfo=userinfo.split()
