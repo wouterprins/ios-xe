@@ -19,6 +19,8 @@ try:
      parser.add_argument("username", help="display information for this username")
      parser.add_argument("route", help="route that belongs to the username")
      args = parser.parse_args()
+     #strip everything behind @ from username (no match for username in local router)
+     args.username=args.username.split('@')[0]
 
 except:
     e = sys.exc_info()[0]
@@ -34,9 +36,6 @@ totaluserspppoa = net_connect.send_command('show users summary  | incl PPPOA')
 #print userinfo.find(args.username) == -1 and routeinfo.find(args.route) == -1 #username and route not present
 #print userinfo.find(args.username) == -1 and routeinfo.find(args.route) != -1 #username is not found, route is present
 #print userinfo.find(args.username) != -1 and routeinfo.find(args.route) != -1 #username present and route present
-
-#strip everything behind @ from username (no match for username in local router)
-args.username=args.username.split('@')[0]
 
 # total users
 totalusers=totalusers.split()
@@ -92,3 +91,4 @@ elif (userinfo.find(args.username) != -1 and routeinfo.find(args.route) != -1):
                 print 'Results of ATM ping: %s' % atmping + '\r\n'
                 print "Total # of PPPoA users: %s \r\n" % totaluserspppoa[1]
                 print "Total # of PPP users: %s \r\n" % totalusers[0]
+
